@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import { useBudget } from "@/context/BudgetContext";

@@ -15,21 +15,20 @@ const IndexPage: React.FC = () => {
   const { expenses, addExpense } = useExpenses();
   const { setSpent, setBudget, budget, spent } = useBudget();
 
-  const categorizedExpenses = useCallback(
-    expenses.reduce((acc: any, expense) => {
+  const categorizedExpenses = useCallback(() => {
+    return expenses.reduce((acc: { [key: string]: number }, expense) => {
       const { description: category, amount } = expense;
       if (!acc[category]) {
         acc[category] = 0;
       }
       acc[category] += amount;
       return acc;
-    }, {}),
-    [expenses]
-  );
+    }, {});
+  }, [expenses]);
 
-  const chartData = Object.keys(categorizedExpenses).map((category) => ({
+  const chartData = Object.keys(categorizedExpenses()).map((category) => ({
     category,
-    amount: categorizedExpenses[category],
+    amount: categorizedExpenses()[category],
   }));
 
   useEffect(() => {
