@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React from "react";
 
 type ExpenseCardProps = {
@@ -17,8 +18,12 @@ const ExpenseCard = ({
     <div className="text-lg font-bold">
       {amount} {currency}
     </div>
-    <div className="text-sm text-gray-600">{description}</div>
-    <div className="text-xs text-gray-400">{date}</div>
+    {description && <div className="text-sm text-gray-600">{description}</div>}
+    {date && (
+      <div className="text-xs text-gray-400">
+        {format(date, "yyyy-MM-dd HH:mm a")}
+      </div>
+    )}
   </div>
 );
 

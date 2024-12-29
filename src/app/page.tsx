@@ -24,11 +24,11 @@ const IndexPage: React.FC = () => {
 
   const categorizedExpenses = useCallback(() => {
     return expenses.reduce((acc: { [key: string]: number }, expense) => {
-      const { description: category, amount } = expense;
+      const { description: category, usdAmount } = expense;
       if (!acc[category]) {
         acc[category] = 0;
       }
-      acc[category] += amount;
+      acc[category] += usdAmount;
       return acc;
     }, {});
   }, [expenses]);
@@ -40,7 +40,7 @@ const IndexPage: React.FC = () => {
 
   useEffect(() => {
     const totalSpent = expenses.reduce(
-      (acc, expense) => acc + expense.amount,
+      (acc, expense) => acc + expense.usdAmount,
       0
     );
     setSpent(totalSpent);

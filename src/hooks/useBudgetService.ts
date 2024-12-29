@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useBudget } from "../context/BudgetContext";
-import apiClient from "@/api/apiClient";
 import { Budget } from "@/types/Budget";
+import apiClient from "@/utils/api";
 
 export interface CreateBudgetPayload {
   amount: number;

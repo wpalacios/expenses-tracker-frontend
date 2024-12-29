@@ -45,10 +45,8 @@ const BudgetForm = ({ bordered = false }: BudgetFormProps) => {
     <div className={clsx("p-4 rounded", bordered && "border")}>
       <Input
         label="Budget"
-        value={budget?.amount ?? 0} // Ensure budget is defined
-        onChange={(e) =>
-          updateBudget({ ...budget, amount: parseFloat(e.target.value) })
-        }
+        value={budget?.amount}
+        onChange={(e) => handleCreateOrUpdate(parseFloat(e.target.value))}
         type="number"
       />
       <div className="flex flex-row gap-4">

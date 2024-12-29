@@ -6,4 +6,5 @@ export type Expense = {
   currency: string;
   description: string;
   date: string;
+  usdAmount: number;
 };

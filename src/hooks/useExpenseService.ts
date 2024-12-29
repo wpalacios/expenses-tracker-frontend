@@ -1,7 +1,7 @@
-import apiClient from "@/api/apiClient";
+import { useExpenses } from "@/context/ExpensesContext";
 import { Expense } from "@/types/Expense";
+import apiClient from "@/utils/api";
 import { useCallback, useState } from "react";
-import { useExpenses } from "../context/ExpensesContext";
 
 export const useExpensesService = () => {
   const { expenses, addExpense, setExpenses } = useExpenses();
@@ -33,6 +33,7 @@ export const useExpensesService = () => {
   const addNewExpense = async (expenseData: {
     description: string;
     amount: number;
+    usdAmount: number;
     currency: string;
     date: string;
     budgetId?: number;
@@ -42,7 +43,6 @@ export const useExpensesService = () => {
     setError(null);
 
     try {
-      debugger;
       const response = await apiClient.post<Expense>("/expenses", expenseData);
       addExpense({ ...response.data });
 

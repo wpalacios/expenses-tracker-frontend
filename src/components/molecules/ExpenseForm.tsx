@@ -2,12 +2,15 @@
 
 import { useBudget } from "@/context/BudgetContext";
 import { useExpenses } from "@/context/ExpensesContext";
+import { useExchangeService } from "@/hooks/useExchangeService";
 import { useExpensesService } from "@/hooks/useExpenseService";
 import { Expense } from "@/types/Expense";
 import clsx from "clsx";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
+import Label from "../atoms/Label";
+import Dropdown from "./Dropdown";
 
 type ExpenseFormProps = {
   bordered?: boolean;
@@ -22,38 +25,72 @@ const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
   const { budget } = useBudget();
   const { expenses } = useExpenses();
   const { addNewExpense } = useExpensesService();
-  const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("USD");
+  const { convertToUsd } = useExchangeService();
+  const [amount, setAmount] = useState(0);
+  const [usdAmount, setUsdAmount] = useState(0);
+  const [currency, setCurrency] = useState("usd");
   const [description, setDescription] = useState("");
+  const { currencies } = useExchangeService();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     handleAddExpense();
 
-    onSubmit({ amount: parseFloat(amount), currency, description });
+    if (amount && currency !== "" && budget) {
+      onSubmit({ amount: amount, currency, description });
+    }
   };
 
   const handleAddExpense = useCallback(async () => {
     try {
-      if (amount && currency && budget) {
+      if (amount && currency !== "" && budget) {
         const newExpense: Expense = await addNewExpense({
           date: new Date().toISOString(),
           budgetId: budget.id,
           userId: 1,
-          amount: parseFloat(amount),
+          amount,
+          usdAmount,
           currency,
           description,
         });
 
         if (newExpense) {
-          setAmount("");
+          setAmount(0);
           setDescription("");
         }
       }
     } catch (error) {
       console.error("Error trying to add Expense: ", error);
     }
-  }, [amount, currency, budget, addNewExpense]);
+  }, [amount, usdAmount, currency, description, budget, addNewExpense]);
+
+  const getUsdAmount = useCallback(
+    async (selectedCurrency: string) => {
+      if (amount && selectedCurrency === "usd") {
+        setUsdAmount(amount);
+        return;
+      }
+
+      if (
+        amount &&
+        selectedCurrency &&
+        selectedCurrency.toLowerCase() !== "usd"
+      ) {
+        const response = await convertToUsd(amount, selectedCurrency);
+
+        if (response?.amount) {
+          setUsdAmount(response?.amount);
+        }
+      }
+    },
+    [convertToUsd, amount]
+  );
+
+  useEffect(() => {
+    if (amount > 0 && currency !== "") {
+      getUsdAmount(currency);
+    }
+  }, [amount, currency]);
 
   return (
     <form
@@ -62,14 +99,35 @@ const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
     >
       <Input
         label="Expense Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
         type="number"
+        value={amount}
+        onChange={(e) => setAmount(parseFloat(e.target.value))}
       />
-      <Input
-        label="Currency"
+      <Label htmlFor="currency">
+        Currency:{" "}
+        {currency !== "usd" && (
+          <span className="font-semibold">
+            {currency} equivalent to {usdAmount.toFixed(2)} usd
+          </span>
+        )}
+        {currency === "usd" && (
+          <span className="font-semibold">{currency}</span>
+        )}
+      </Label>
+      <Dropdown
+        id="currency"
+        className="mb-4"
+        options={Object.entries(currencies).map(([key, value]) => ({
+          value: key,
+          label:
+            (value as unknown as string) === ""
+              ? key.toLocaleUpperCase()
+              : (value as unknown as string),
+        }))}
         value={currency}
-        onChange={(e) => setCurrency(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          setCurrency(e.target.value)
+        }
       />
       <Input
         label="Description"

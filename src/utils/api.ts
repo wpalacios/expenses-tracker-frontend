@@ -1,12 +1,18 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3001"; // Adjust based on your backend setup
-
-export const api = axios.create({
-  baseURL: BASE_URL,
+const apiClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_API_URL, // Replace with your backend API base URL
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-export const fetchExchangeRates = async () => {
-  const { data } = await axios.get("https://api.exchangerate.host/latest");
-  return data;
-};
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default apiClient;

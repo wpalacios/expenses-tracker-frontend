@@ -1,4 +1,5 @@
 import React from "react";
+import Label from "./Label";
 
 type InputProps = {
   id?: string;
@@ -18,7 +19,7 @@ const Input = ({
   type = "text",
 }: InputProps) => (
   <div className="mb-4">
-    <label className="block text-sm font-medium mb-1">{label}</label>
+    <Label htmlFor={id}>{label}</Label>
     <input
       id={id}
       type={type}

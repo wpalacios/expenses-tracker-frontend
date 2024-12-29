@@ -68,7 +68,7 @@ const Chart = ({ data }: ChartProps) => (
         cy="50%"
         outerRadius={200}
         fill="#8884d8"
-        label={({ name, value }) => `${name}: $${value}`}
+        label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
       >
         {data.map((entry, index) => (
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { Expense } from "@/types/Expense";
 import React, {
   createContext,
   useState,
@@ -7,16 +8,6 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-
-type Expense = {
-  id: number;
-  amount: number;
-  currency: string;
-  description: string;
-  date: string;
-  budgetId: number;
-  userId: number;
-};
 
 type ExpensesContextProps = {
   expenses: Expense[];
