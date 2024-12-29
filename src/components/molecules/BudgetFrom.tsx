@@ -1,48 +1,61 @@
 "use client";
 
-import React from "react";
-import Input from "../atoms/Input";
+import { useBudgetService } from "@/hooks/useBudgetService";
+import clsx from "clsx";
+import React, { useCallback } from "react";
 import Button from "../atoms/Button";
+import Input from "../atoms/Input";
 import { useBudget } from "@/context/BudgetContext";
 
 type BudgetFormProps = {
-  onSubmit: (budget: number) => void;
+  bordered?: boolean;
 };
 
-const BudgetForm = ({ onSubmit }: BudgetFormProps) => {
-  const { budget, setBudget } = useBudget();
+const BudgetForm = ({ bordered = false }: BudgetFormProps) => {
+  const { budget } = useBudget();
+  const { updateBudget, createBudget } = useBudgetService();
   const VARIANT = 500;
 
-  const handleIncrease = () => onSubmit(budget + VARIANT);
+  const handleCreateOrUpdate = useCallback(
+    (amount: number) => {
+      if (budget?.id) {
+        updateBudget({ ...budget, amount });
+      } else {
+        createBudget({ amount, currency: "USD" });
+      }
+    },
+    [budget, createBudget, updateBudget]
+  );
 
-  const handleDecrease = () => onSubmit(budget > 0 ? budget - VARIANT : 0);
+  const handleIncrease = useCallback(() => {
+    if (budget) {
+      const newAmount = (budget.amount ?? 0) + VARIANT; // Correct operator precedence
+      handleCreateOrUpdate(newAmount);
+    }
+  }, [budget, handleCreateOrUpdate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(budget + 500);
-  };
+  const handleDecrease = useCallback(() => {
+    if (budget && budget.amount > 0) {
+      const newAmount = (budget.amount ?? 0) - VARIANT; // Correct operator precedence
+      handleCreateOrUpdate(newAmount);
+    }
+  }, [budget, handleCreateOrUpdate]);
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded">
+    <div className={clsx("p-4 rounded", bordered && "border")}>
       <Input
         label="Budget"
-        value={budget}
-        onChange={(e) => setBudget(parseFloat(e.target.value))}
+        value={budget?.amount ?? 0} // Ensure budget is defined
+        onChange={(e) =>
+          updateBudget({ ...budget, amount: parseFloat(e.target.value) })
+        }
         type="number"
       />
       <div className="flex flex-row gap-4">
-        <Button
-          text="Decrease Budget by 500"
-          onClick={handleDecrease}
-          className="w-full"
-        />
-        <Button
-          text="Increase Budget by 500"
-          onClick={handleIncrease}
-          className="w-full"
-        />
+        <Button text="- 500" onClick={handleDecrease} className="w-full" />
+        <Button text="+ 500" onClick={handleIncrease} className="w-full" />
       </div>
-    </form>
+    </div>
   );
 };
 

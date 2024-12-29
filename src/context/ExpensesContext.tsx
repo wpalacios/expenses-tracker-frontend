@@ -14,11 +14,14 @@ type Expense = {
   currency: string;
   description: string;
   date: string;
+  budgetId: number;
+  userId: number;
 };
 
 type ExpensesContextProps = {
   expenses: Expense[];
   addExpense: (expense: Expense) => void;
+  setExpenses: (expenses: Expense[]) => void;
 };
 
 const ExpensesContext = createContext<ExpensesContextProps | undefined>(
@@ -33,7 +36,7 @@ export const ExpensesProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const value = React.useMemo(
-    () => ({ expenses, addExpense }),
+    () => ({ expenses, addExpense, setExpenses }),
     [expenses, addExpense]
   );
 

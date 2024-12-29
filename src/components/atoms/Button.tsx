@@ -4,7 +4,7 @@ type ButtonProps = {
   text?: string;
   type?: "submit" | "button";
   children?: React.ReactNode;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
 };
 

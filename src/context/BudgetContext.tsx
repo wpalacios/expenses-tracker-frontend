@@ -1,18 +1,19 @@
 "use client";
 
+import { Budget } from "@/types/Budget";
 import React, { createContext, useState, useContext, ReactNode } from "react";
 
 type BudgetContextProps = {
-  budget: number;
+  budget: Budget;
   spent: number;
-  setBudget: (budget: number) => void;
+  setBudget: (budget: Budget) => void;
   setSpent: (spent: number) => void;
 };
 
 const BudgetContext = createContext<BudgetContextProps | undefined>(undefined);
 
 export const BudgetProvider = ({ children }: { children: ReactNode }) => {
-  const [budget, setBudget] = useState(0);
+  const [budget, setBudget] = useState({} as Budget);
   const [spent, setSpent] = useState(0);
 
   const value = React.useMemo(

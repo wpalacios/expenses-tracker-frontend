@@ -25,6 +25,9 @@ const Input = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
+      onScroll={() => {}}
+      onWheel={() => {}}
+      onFocus={() => {}}
       className="w-full px-3 py-2 border rounded"
     />
   </div>

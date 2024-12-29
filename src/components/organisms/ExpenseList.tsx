@@ -3,7 +3,6 @@
 import React from "react";
 import ExpenseCard from "../molecules/ExpenseCard";
 import { Expense } from "@/types/Expense";
-import Typography from "../atoms/Typography";
 
 type ExpenseListProps = {
   expenses: Expense[];
@@ -11,7 +10,6 @@ type ExpenseListProps = {
 
 const ExpenseList = ({ expenses }: ExpenseListProps) => (
   <div>
-    {expenses?.length > 0 && <Typography variant="h2">Expenses</Typography>}
     {expenses.map((expense) => (
       <ExpenseCard
         key={expense.id}
