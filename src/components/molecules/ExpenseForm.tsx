@@ -6,7 +6,8 @@ import { useExchangeService } from "@/hooks/useExchangeService";
 import { useExpensesService } from "@/hooks/useExpenseService";
 import { Expense } from "@/types/Expense";
 import clsx from "clsx";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "../atoms/Button";
 import Input from "../atoms/Input";
 import Label from "../atoms/Label";
@@ -21,125 +22,130 @@ type ExpenseFormProps = {
   }) => void;
 };
 
+type FormValues = {
+  amount: number;
+  currency: string;
+  description: string;
+};
+
 const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
   const { budget } = useBudget();
   const { expenses } = useExpenses();
   const { addNewExpense } = useExpensesService();
-  const { convertToUsd } = useExchangeService();
-  const [amount, setAmount] = useState(0);
-  const [usdAmount, setUsdAmount] = useState(0);
-  const [currency, setCurrency] = useState("usd");
-  const [description, setDescription] = useState("");
-  const { currencies } = useExchangeService();
+  const { convertToUsd, currencies } = useExchangeService();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      amount: 0,
+      currency: "usd",
+      description: "",
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleAddExpense();
+  const amount = watch("amount");
+  const currency = watch("currency");
 
-    if (amount && currency !== "" && budget) {
-      onSubmit({ amount: amount, currency, description });
-    }
-  };
+  const handleAddExpense = useCallback(
+    async (data: FormValues) => {
+      try {
+        if (data.amount && data.currency !== "" && budget) {
+          const usdAmount =
+            data.currency === "usd"
+              ? data.amount
+              : (await convertToUsd(data.amount, data.currency))?.amount ?? 0;
 
-  const handleAddExpense = useCallback(async () => {
-    try {
-      if (amount && currency !== "" && budget) {
-        const newExpense: Expense = await addNewExpense({
-          date: new Date().toISOString(),
-          budgetId: budget.id,
-          userId: 1,
-          amount,
-          usdAmount,
-          currency,
-          description,
-        });
+          const newExpense: Expense = await addNewExpense({
+            date: new Date().toISOString(),
+            budgetId: budget.id,
+            userId: 1,
+            amount: data.amount,
+            usdAmount,
+            currency: data.currency,
+            description: data.description,
+          });
 
-        if (newExpense) {
-          setAmount(0);
-          setDescription("");
+          if (newExpense) {
+            setValue("amount", 0);
+            setValue("description", "");
+          }
         }
-      }
-    } catch (error) {
-      console.error("Error trying to add Expense: ", error);
-    }
-  }, [amount, usdAmount, currency, description, budget, addNewExpense]);
-
-  const getUsdAmount = useCallback(
-    async (selectedCurrency: string) => {
-      if (amount && selectedCurrency === "usd") {
-        setUsdAmount(amount);
-        return;
-      }
-
-      if (
-        amount &&
-        selectedCurrency &&
-        selectedCurrency.toLowerCase() !== "usd"
-      ) {
-        const response = await convertToUsd(amount, selectedCurrency);
-
-        if (response?.amount) {
-          setUsdAmount(response?.amount);
-        }
+      } catch (error) {
+        console.error("Error trying to add Expense: ", error);
       }
     },
-    [convertToUsd, amount]
+    [budget, addNewExpense, convertToUsd, setValue]
   );
 
+  const onSubmitHandler: SubmitHandler<FormValues> = async (data) => {
+    await handleAddExpense(data);
+    onSubmit(data);
+  };
+
   useEffect(() => {
-    if (amount > 0 && currency !== "") {
-      getUsdAmount(currency);
+    if (amount > 0 && currency !== "usd") {
+      convertToUsd(amount, currency).then((response) => {
+        if (response?.amount) {
+          console.log(`Equivalent USD amount: ${response.amount}`);
+        }
+      });
     }
-  }, [amount, currency]);
+  }, [amount, currency, convertToUsd]);
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmitHandler)}
       className={clsx("p-4 rounded", bordered && "border")}
     >
-      <Input
-        label="Expense Amount"
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(parseFloat(e.target.value))}
-      />
+      <div className="mb-4">
+        <Input
+          label="Expense Amount"
+          type="number"
+          {...register("amount", {
+            required: "Amount is required",
+            valueAsNumber: true,
+            min: { value: 1, message: "Value has to be greater than zero" },
+          })}
+        />
+        {errors.amount && (
+          <span className="text-sm text-red-500">{errors.amount.message}</span>
+        )}
+      </div>
       <Label htmlFor="currency">
         Currency:{" "}
-        {currency !== "usd" && (
-          <span className="font-semibold">
-            {currency} equivalent to {usdAmount.toFixed(2)} usd
+        <Dropdown
+          id="currency"
+          className="mb-4"
+          options={Object.entries(currencies).map(([key, value]) => ({
+            value: key,
+            label:
+              (value as unknown as string) === ""
+                ? key.toLocaleUpperCase()
+                : (value as unknown as string),
+          }))}
+          value={currency}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setValue("currency", e.target.value)
+          }
+        />
+      </Label>
+      <div className="mb-4">
+        <Input
+          label="Description"
+          {...register("description", { required: "Description is required" })}
+        />
+        {errors.description && (
+          <span className="text-sm text-red-500">
+            {errors.description.message}
           </span>
         )}
-        {currency === "usd" && (
-          <span className="font-semibold">{currency}</span>
-        )}
-      </Label>
-      <Dropdown
-        id="currency"
-        className="mb-4"
-        options={Object.entries(currencies).map(([key, value]) => ({
-          value: key,
-          label:
-            (value as unknown as string) === ""
-              ? key.toLocaleUpperCase()
-              : (value as unknown as string),
-        }))}
-        value={currency}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          setCurrency(e.target.value)
-        }
-      />
-      <Input
-        label="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
+      </div>
       <div className="flex flex-row gap-4">
-        <Button
-          text="Add Expense"
-          onClick={expenses?.length > 0 ? handleAddExpense : handleSubmit}
-          className="w-full"
-        />
+        <Button type="submit" text="Add Expense" className="w-full" />
         {expenses?.length > 0 && (
           <Button type="submit" text="Add Expense & Close" className="w-full" />
         )}

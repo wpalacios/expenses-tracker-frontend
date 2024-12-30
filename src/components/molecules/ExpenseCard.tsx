@@ -14,16 +14,18 @@ const ExpenseCard = ({
   description,
   date,
 }: ExpenseCardProps) => (
-  <div className="p-4 border rounded mb-4">
-    <div className="text-lg font-bold">
-      {amount} {currency}
-    </div>
-    {description && <div className="text-sm text-gray-600">{description}</div>}
-    {date && (
-      <div className="text-xs text-gray-400">
-        {format(date, "yyyy-MM-dd HH:mm a")}
+  <div className="p-4 border rounded-lg mb-4">
+    {description && <div className="text-lg font-bold">{description}</div>}
+    <div className="flex flex-row gap-2 items-baseline">
+      <div className="font-bold text-gray-500">
+        {amount} {currency}
       </div>
-    )}
+      {date && (
+        <div className="text-xs text-gray-400">
+          {format(date, "yyyy-MM-dd HH:mm a")}
+        </div>
+      )}
+    </div>
   </div>
 );
 

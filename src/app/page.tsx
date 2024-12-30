@@ -23,6 +23,7 @@ const IndexPage: React.FC = () => {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
 
   const categorizedExpenses = useCallback(() => {
+    debugger;
     return expenses.reduce((acc: { [key: string]: number }, expense) => {
       const { description: category, usdAmount } = expense;
       if (!acc[category]) {
@@ -58,9 +59,15 @@ const IndexPage: React.FC = () => {
 
   return (
     <DashboardTemplate
-      header={<h1 className="text-2xl font-bold">Expense Tracker</h1>}
+      header={
+        <div className="flex items-center justify-between px-6 py-4  text-white shadow-md">
+          <Typography variant="h1" className="text-2xl font-bold">
+            Expense Tracker
+          </Typography>
+        </div>
+      }
       content={
-        <div className="space-y-8">
+        <div className="p-6 space-y-8 bg-background h-screen">
           <BudgetOverview
             spent={spent}
             budget={budget.amount ?? 0}
@@ -69,20 +76,22 @@ const IndexPage: React.FC = () => {
             onExpenseClick={() => setIsExpenseModalOpen(!isExpenseModalOpen)}
           />
 
-          <div className="flex flex-row w-full">
-            <div className="flex flex-col w-1/2">
-              {spent > 0 && <Chart data={chartData} />}
-            </div>
-            <div className="flex flex-col w-1/2 ">
-              {expenses?.length > 0 && (
-                <Typography variant="h2" className="text-lg font-bold pb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {spent > 0 && (
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <Chart data={chartData} />
+              </div>
+            )}
+            {expenses?.length > 0 && (
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <Typography variant="h2" className="text-xl font-bold pb-4">
                   Expenses
                 </Typography>
-              )}
-              <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
-                {spent > 0 && <ExpenseList expenses={expenses} />}
+                <div className="max-h-[calc(100vh-12rem)] overflow-y-auto">
+                  {spent > 0 && <ExpenseList expenses={expenses} />}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           <Modal

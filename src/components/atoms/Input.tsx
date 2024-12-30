@@ -1,13 +1,11 @@
 import React from "react";
 import Label from "./Label";
 
-type InputProps = {
-  id?: string;
+type InputProps = React.DetailedHTMLProps<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+> & {
   label: string;
-  placeholder?: string;
-  value: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  type?: string;
 };
 
 const Input = ({
@@ -17,6 +15,7 @@ const Input = ({
   value,
   onChange,
   type = "text",
+  ...otherProps
 }: InputProps) => (
   <div className="mb-4">
     <Label htmlFor={id}>{label}</Label>
@@ -29,7 +28,8 @@ const Input = ({
       onScroll={() => {}}
       onWheel={() => {}}
       onFocus={() => {}}
-      className="w-full px-3 py-2 border rounded"
+      className="w-full p-3 rounded-lg border transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm text-gray-700"
+      {...otherProps}
     />
   </div>
 );

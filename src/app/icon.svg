@@ -1,0 +1,13 @@
+<svg viewBox="0 0 12 20" fill="none"
+    xmlns="http://www.w3.org/2000/svg" class="mr-2 h-5">
+    <g clip-path="url(#brandmark_svg__a)">
+        <path d="M10.886 0 4.658 12.754.802 8.84 10.886 0Z" fill="#FF7D52"></path>
+        <path d="M1.114 20 7.34 7.246l3.856 3.915L1.114 20Z" fill="#FF7D52"></path>
+        <path d="m4.657 12.754 2.69-5.507L.802 8.84l3.855 3.915Z" fill="#F0511C"></path>
+    </g>
+    <defs>
+        <clipPath id="brandmark_svg__a">
+            <path fill="#fff" transform="translate(.802)" d="M0 0h10.396v20H0z"></path>
+        </clipPath>
+    </defs>
+</svg>

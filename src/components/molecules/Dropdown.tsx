@@ -29,7 +29,7 @@ const Dropdown = ({
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className={`w-full px-3 py-2 border rounded ${className}`}
+      className={`w-full p-3 rounded-lg border transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm text-gray-700  ${className}`}
     >
       <option value="" disabled>
         {placeholder}

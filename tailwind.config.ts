@@ -1,5 +1,3 @@
-import type { Config } from "tailwindcss";
-
 export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,11 +6,18 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        primary: "#002B5B",
+        montserrat: ["Montserrat", "sans-serif"],
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        primary: "#ff7d52",
+        secondary: "#FFD700",
+        accent: "#D9D9D9",
+        background: "#F8F9FA",
+        text: "#343A40",
+        "orange-100": "#fdf7ef",
       },
     },
   },
-  plugins: [],
-} satisfies Config;
+};

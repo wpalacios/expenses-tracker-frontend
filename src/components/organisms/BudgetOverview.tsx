@@ -7,6 +7,7 @@ import {
 import { MouseEventHandler } from "react";
 import Button from "../atoms/Button";
 import ProgressBar from "../molecules/ProgressBar";
+import Typography from "../atoms/Typography";
 
 type BudgetOverviewProps = {
   spent: number;
@@ -27,12 +28,14 @@ const BudgetOverview = ({
   const progress = Math.min((spent / budget) * 100, 100);
 
   return (
-    <div className="p-4 border rounded">
+    <div className="border bg-white p-6 rounded-lg shadow-md">
       <div className="flex flex-row justify-between items-center">
         <div className="flex flex-col gap-2 w-full">
-          <h3 className="text-lg font-bold">Budget Overview</h3>
+          <Typography variant="h2" className="text-xl font-bold">
+            Budget Overview
+          </Typography>
           <p className="text-gray-600">
-            <span className="font-semibold">Budget:</span> {budget.toFixed(2)}
+            <span className="font-semibold">Budget:</span> {budget.toFixed(2)}{" "}
             USD
           </p>
           <p className="text-gray-600">
