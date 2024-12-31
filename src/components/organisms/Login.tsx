@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { useRouter } from "next/navigation"; // Correct import for client-side navigation
-import Input from "../atoms/Input";
-import Button from "../atoms/Button";
-import { useAuthService } from "@/hooks/userAuthService";
-import Typography from "../atoms/Typography";
 import { useUser } from "@/context/UserContext";
+import { useAuthService } from "@/hooks/userAuthService";
+import { useRouter } from "next/navigation"; // Correct import for client-side navigation
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import Button from "../atoms/Button";
+import Input from "../atoms/Input";
+import Typography from "../atoms/Typography";
 
 interface ILoginForm {
   email: string;
@@ -44,9 +44,8 @@ const Login = () => {
       localStorage.setItem("userId", userData.id);
       router.push("/dashboard");
     } catch (err) {
-      setError(
-        `Login failed. Please check your credentials: ${(err as Error).message}`
-      );
+      console.error(err);
+      setError("Login failed. Please check your credentials");
     }
   };
 

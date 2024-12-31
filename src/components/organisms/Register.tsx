@@ -44,9 +44,8 @@ const Register = () => {
         router.push("/");
       }
     } catch (err) {
-      setError(
-        `Registration failed. Please try again later: ${(err as Error).message}`
-      );
+      console.error(err);
+      setError("Registration failed. Please try again later");
     }
   };
 

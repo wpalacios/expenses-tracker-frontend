@@ -52,7 +52,6 @@ const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
 
   const handleAddExpense = useCallback(
     async (data: FormValues) => {
-      debugger;
       try {
         if (data.amount && data.currency !== "" && budget) {
           const usdAmount =
