@@ -48,11 +48,11 @@ const BudgetOverview = ({
           <ProgressBar progress={progress} />
         </div>
         <div className="flex flex-col gap-2">
-          <Button onClick={onBudgetClick} className="text-blue-500">
+          <Button onClick={onBudgetClick} variant="primary">
             <AdjustmentsHorizontalIcon className="size-6 text-white" />
           </Button>
           {enableExpense === true && (
-            <Button onClick={onExpenseClick} className="text-blue-500">
+            <Button onClick={onExpenseClick} variant="primary">
               <CurrencyDollarIcon className="size-6 text-white" />
             </Button>
           )}

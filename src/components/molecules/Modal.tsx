@@ -19,7 +19,7 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 mt-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-md">
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
           {title && <h2 className="text-lg font-semibold">{title}</h2>}

@@ -145,9 +145,19 @@ const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
         )}
       </div>
       <div className="flex flex-row gap-4">
-        <Button type="submit" text="Add Expense" className="w-full" />
+        <Button
+          type="submit"
+          text="Add Expense"
+          className="w-full"
+          variant="secondary"
+        />
         {expenses?.length > 0 && (
-          <Button type="submit" text="Add Expense & Close" className="w-full" />
+          <Button
+            type="submit"
+            text="Add Expense & Close"
+            className="w-full"
+            variant="secondary"
+          />
         )}
       </div>
     </form>

@@ -1,5 +1,6 @@
 import React from "react";
 import Label from "./Label";
+import clsx from "clsx";
 
 type InputProps = React.DetailedHTMLProps<
   React.InputHTMLAttributes<HTMLInputElement>,
@@ -15,6 +16,7 @@ const Input = ({
   value,
   onChange,
   type = "text",
+  className,
   ...otherProps
 }: InputProps) => (
   <div className="mb-4">
@@ -28,7 +30,10 @@ const Input = ({
       onScroll={() => {}}
       onWheel={() => {}}
       onFocus={() => {}}
-      className="w-full p-3 rounded-lg border transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm text-gray-700"
+      className={clsx(
+        "w-full p-3 rounded-lg border border-1 transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm text-gray-700",
+        className
+      )}
       {...otherProps}
     />
   </div>

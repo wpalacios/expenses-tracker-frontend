@@ -50,8 +50,18 @@ const BudgetForm = ({ bordered = false }: BudgetFormProps) => {
         type="number"
       />
       <div className="flex flex-row gap-4">
-        <Button text="- 500" onClick={handleDecrease} className="w-full" />
-        <Button text="+ 500" onClick={handleIncrease} className="w-full" />
+        <Button
+          text="- 500"
+          onClick={handleDecrease}
+          className="w-full"
+          variant="secondary"
+        />
+        <Button
+          text="+ 500"
+          onClick={handleIncrease}
+          className="w-full"
+          variant="secondary"
+        />
       </div>
     </div>
   );
