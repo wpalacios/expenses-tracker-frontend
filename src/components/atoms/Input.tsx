@@ -31,7 +31,7 @@ const Input = ({
       onWheel={() => {}}
       onFocus={() => {}}
       className={clsx(
-        "w-full p-3 rounded-lg border border-1 transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm text-gray-700",
+        "w-full p-3 rounded-lg border transition focus:outline-none focus:ring-[0.5] focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm text-gray-700",
         className
       )}
       {...otherProps}
