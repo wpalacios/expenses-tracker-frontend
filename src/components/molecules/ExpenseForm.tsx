@@ -52,6 +52,7 @@ const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
 
   const handleAddExpense = useCallback(
     async (data: FormValues) => {
+      debugger;
       try {
         if (data.amount && data.currency !== "" && budget) {
           const usdAmount =
@@ -146,10 +147,11 @@ const ExpenseForm = ({ onSubmit, bordered = false }: ExpenseFormProps) => {
       </div>
       <div className="flex flex-row gap-4">
         <Button
-          type="submit"
+          type="button"
           text="Add Expense"
           className="w-full"
           variant="secondary"
+          onClick={() => handleSubmit((data) => handleAddExpense(data))()}
         />
         {expenses?.length > 0 && (
           <Button
